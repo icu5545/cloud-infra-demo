@@ -1,0 +1,12 @@
+on: [push]
+jobs:
+  Build-And-Push-Image:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Build and Push
+        uses: docker/build-push-action@v3
+        with:
+          push: false
+          tags: demo-app:latest
+          context: app
