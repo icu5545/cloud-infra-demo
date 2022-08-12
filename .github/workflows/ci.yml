@@ -20,4 +20,4 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: k0h3x1n2/cloud-infra-demo/demo-app:latest
+          tags: k0h3x1n2/cloud-infra-demo:latest
