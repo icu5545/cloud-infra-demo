@@ -7,85 +7,50 @@ terraform {
   }
 }
 
-resource "aws_elastic_beanstalk_application" "default" {
-  name = var.app_name
-  description = "Cloud infrastructure demo deployment"
+
+resource "aws_ecrpublic_repository" "repo" {
+  repository_name = "cloud-infra-demo"
+  force_destroy = true
 }
 
-resource "aws_elastic_beanstalk_environment" "default" {
-  name                = format("%s-%s", var.app_name, "env")
-  application         = aws_elastic_beanstalk_application.default.name
-  solution_stack_name = var.solution_stack_name
-  tier                = var.tier
-
-  setting {
-    namespace = "aws:autoscaling:asg"
-    name      = "MinSize"
-    value     = 1
-  }
-  setting {
-    namespace = "aws:autoscaling:asg"
-    name      = "MaxSize"
-    value     = 1
-  }
-
-  setting {
-    namespace = "aws:autoscaling:launchconfiguration"
-    name      = "IamInstanceProfile"
-    value     =  "aws-elasticbeanstalk-ec2-role"
-  }
-  setting {
-    namespace = "aws:autoscaling:launchconfiguration"
-    name      = "InstanceType"
-    value     = var.instance_type
-  }
-  setting {
-    namespace = "aws:autoscaling:launchconfiguration"
-    name      = "IamInstanceProfile"
-    value     =  "aws-elasticbeanstalk-ec2-role"
-  }
-  setting {
-    namespace = "aws:autoscaling:launchconfiguration"
-    name      = "EC2KeyName"
-    value     = format("%s-%s", var.app_name, "deployer-key")
-  }
-
-  setting {
-    namespace = "aws:elasticbeanstalk:environment"
-    name      = "LoadBalancerType"
-    value     = "application"
-  }
-
-  setting {
-    namespace = "aws:elasticbeanstalk:environment:process:default"
-    name      = "MatcherHTTPCode"
-    value     = "200"
-  }
+resource "aws_iam_user" "github" {
+  name = "github"
+  force_destroy = true
 }
 
-resource "aws_key_pair" "deployer" {
-  key_name = format("%s-%s", var.app_name, "deployer-key")
-  public_key = var.deployer_public_key
+resource "aws_iam_access_key" "github" {
+  user = "${aws_iam_user.github.name}"
 }
 
+resource "aws_iam_user_policy" "github_ecr" {
+  name = "github_ecr"
+  user = aws_iam_user.github.name
 
-
-data "aws_instance" "ec2_instance" {
-  filter {
-    name = "tag:elasticbeanstalk:environment-id"
-    values = [ "${aws_elastic_beanstalk_environment.default.id}" ]
-  }
-  filter {
-    name = "instance-state-name"
-    values = [ "running" ]
-  }
+  policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "ecr-public:GetAuthorizationToken",
+                "sts:GetServiceBearerToken",
+                "ecr-public:BatchCheckLayerAvailability",
+                "ecr-public:GetRepositoryPolicy",
+                "ecr-public:DescribeRepositories",
+                "ecr-public:DescribeRegistries",
+                "ecr-public:DescribeImages",
+                "ecr-public:DescribeImageTags",
+                "ecr-public:GetRepositoryCatalogData",
+                "ecr-public:GetRegistryCatalogData",
+                "ecr-public:InitiateLayerUpload",
+                "ecr-public:UploadLayerPart",
+                "ecr-public:CompleteLayerUpload",
+                "ecr-public:PutImage"
+            ],
+            "Resource": "*"
+        }
+    ]
 }
-
-resource "aws_security_group_rule" "example" {
-  type              = "ingress"
-  from_port         = 8080
-  to_port           = 8080
-  protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = "${sort(data.aws_instance.ec2_instance.vpc_security_group_ids)[0]}"
+EOF
 }

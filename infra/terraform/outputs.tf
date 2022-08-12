@@ -1,13 +1,9 @@
-output "public_uri" {
-    description = "Publicly accessible Web access"
-    value = "${aws_elastic_beanstalk_environment.default.cname}"
+output "registry_url" {
+    value = "${aws_ecrpublic_repository.repo.repository_uri}"
 }
-
-output "ec2_ssh" {
-    description = "EC2 SSH access URL"
-    value = "${data.aws_instance.ec2_instance.public_dns}"
+output "github_key" {
+  value = aws_iam_access_key.github.id
 }
-
-output "ec2_instance" {
-    value = "${data.aws_instance.ec2_instance.*}"
+output "github_secret" {
+  value = nonsensitive(aws_iam_access_key.github.secret)
 }
