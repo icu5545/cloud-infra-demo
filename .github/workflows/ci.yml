@@ -9,4 +9,3 @@ jobs:
         with:
           push: false
           tags: demo-app:latest
-          context: "{{defaultContext}}:app"
