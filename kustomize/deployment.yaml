@@ -24,7 +24,7 @@ spec:
         app: cloud-infra-demo
     spec:
       containers:
-      - image: "app-image"
+      - image: public.ecr.aws/k0h3x1n2/cloud-infra-deployment:latest
         imagePullPolicy: Always
         name: cloud-infra-demo-1
         resources:
