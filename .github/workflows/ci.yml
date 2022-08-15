@@ -57,7 +57,6 @@ jobs:
           chmod u+x ./kustomize
       -
         name: Deploy Image to Cluster
-        working-directory: kustomize
         run: |-
           ./kustomize edit set image app-image=public.ecr.aws/k0h3x1n2/cloud-infra-deployment:latest
           ./kustomize build . | kubectl apply -f -
