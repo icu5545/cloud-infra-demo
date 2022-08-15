@@ -53,7 +53,8 @@ jobs:
         name: Configure Kustomize
         # working-directory: kustomize
         run: |-
-          curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+          curl -sfLo kustomize.tar https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv4.5.7/kustomize_v4.5.7_linux_amd64.tar.gz
+          tar -xzf kustomize.tar
           chmod u+x ./kustomize
       -
         name: Deploy Image to Cluster
