@@ -51,16 +51,16 @@ jobs:
           credentials: ${{ secrets.GKE_SA_KEY }}
       -
         name: Configure Kustomize
-        working-directory: kustomize
+        # working-directory: kustomize
         run: |-
           ls -r -l
           curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
           chmod u+x ./kustomize
       -
-        name: Deploy Image to Cluster
-        working-directory: kustomize
-        run: |-
-          ./kustomize edit set image app-image=public.ecr.aws/k0h3x1n2/cloud-infra-deployment:latest
-          ./kustomize build . | kubectl apply -f -
-          kubectl rollout status deployment/cloud-infra-demo
-          kubectl get services -o wide
+        # name: Deploy Image to Cluster
+        # working-directory: kustomize
+        # run: |-
+        #   ./kustomize edit set image app-image=public.ecr.aws/k0h3x1n2/cloud-infra-deployment:latest
+        #   ./kustomize build . | kubectl apply -f -
+        #   kubectl rollout status deployment/cloud-infra-demo
+        #   kubectl get services -o wide
