@@ -56,14 +56,13 @@ jobs:
           curl -sfLo kustomize.tar https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv4.5.7/kustomize_v4.5.7_linux_amd64.tar.gz
           tar -xzf kustomize.tar -C .
           chmod u+x ./kustomize
-          ls -l
-      # -
-      #   name: Checkout codebase
-      #   uses: actions/checkout@v3
-      # -
-      #   name: Deploy Image to Cluster
-      #   run: |-
-      #     ./kustomize edit set image app-image=public.ecr.aws/k0h3x1n2/cloud-infra-deployment:latest
-      #     ./kustomize build . | kubectl apply -f -
-      #     kubectl rollout status deployment/cloud-infra-demo
-      #     kubectl get services -o wide
+      -
+        name: Checkout codebase
+        uses: actions/checkout@v3
+      -
+        name: Deploy Image to Cluster
+        run: |-
+          ./kustomize edit set image app-image=public.ecr.aws/k0h3x1n2/cloud-infra-deployment:latest
+          ./kustomize build . | kubectl apply -f -
+          kubectl rollout status deployment/cloud-infra-demo
+          kubectl get services -o wide
