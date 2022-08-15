@@ -5,7 +5,7 @@ variable "aws_region" {
 # -------------------------------------------------------
 
 variable "gke_credential" {
-    default = "../../gke-service-account.json"
+    default = "../../gke-credential.json"
 }
 
 variable "gke_region" {
