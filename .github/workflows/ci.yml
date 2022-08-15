@@ -52,13 +52,13 @@ jobs:
       -
         name: Checkout codebase
         uses: actions/checkout@v3
-      -
-        name: Configure Kustomize
-        working-directory: kustomize
-        run: |-
-          curl -sfLo kustomize.tar https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv4.5.7/kustomize_v4.5.7_linux_amd64.tar.gz
-          tar -xzf kustomize.tar -C .
-          chmod u+x ./kustomize
+      # -
+      #   name: Configure Kustomize
+      #   working-directory: kustomize
+      #   run: |-
+      #     curl -sfLo kustomize.tar https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv4.5.7/kustomize_v4.5.7_linux_amd64.tar.gz
+      #     tar -xzf kustomize.tar -C .
+      #     chmod u+x ./kustomize
       # -
       #   name: Deploy Image to Cluster
       #   working-directory: kustomize
@@ -72,6 +72,6 @@ jobs:
         name: Deploy Image to Cluster
         working-directory: kustomize
         run: |-
-          kubectl apply -f -
+          kubectl apply -f deployment.yaml
           kubectl rollout status deployment/cloud-infra-demo
           kubectl get services -o wide
