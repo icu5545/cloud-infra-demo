@@ -57,6 +57,9 @@ jobs:
           tar -xzf kustomize.tar
           chmod u+x ./kustomize
       -
+        name: Checkout codebase
+        uses: actions/checkout@v3
+      -
         name: Deploy Image to Cluster
         run: |-
           ./kustomize edit set image app-image=public.ecr.aws/k0h3x1n2/cloud-infra-deployment:latest
