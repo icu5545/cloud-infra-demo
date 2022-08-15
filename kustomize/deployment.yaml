@@ -1,6 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: cloud-infra-demo
   namespace: default
   labels:
     app: cloud-infra-demo
