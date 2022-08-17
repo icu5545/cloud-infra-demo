@@ -16,12 +16,12 @@ jobs:
         uses: docker/login-action@v2
         with:
           registry: public.ecr.aws
-      -
-        name: Build and Push
-        uses: docker/build-push-action@v3
-        with:
-          push: true
-          tags: public.ecr.aws/k0h3x1n2/cloud-infra-demo:latest
+      # -
+      #   name: Build and Push
+      #   uses: docker/build-push-action@v3
+      #   with:
+      #     push: true
+      #     tags: public.ecr.aws/k0h3x1n2/cloud-infra-demo:latest
       -
         name: Checkout codebase
         uses: actions/checkout@v3
@@ -84,7 +84,8 @@ jobs:
             exit 1
           fi
 
-          if ! [ $(jq --raw-output ".message" <(echo -n $PAYLOAD)) = "Automate all the things!"]
+echo $PAYLOAD
+          if ! [ $(jq --raw-output ".message" <(echo -n $PAYLOAD)) = "Automate all the things!" ]
           then
             echo "Unexpected payload"
             exit 1
