@@ -84,7 +84,7 @@ jobs:
             exit 1
           fi
 
-echo $PAYLOAD
+          echo $PAYLOAD
           if ! [ $(jq --raw-output ".message" <(echo -n $PAYLOAD)) = "Automate all the things!" ]
           then
             echo "Unexpected payload"
