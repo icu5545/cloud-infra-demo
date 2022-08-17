@@ -52,10 +52,40 @@ jobs:
         with:
           cluster_name: 'test-cluster'
           location: 'us-east1'
+      # -
+      #   name: Deploy Image to Cluster
+      #   working-directory: deploy
+      #   run: |-
+      #     kubectl apply -f deployment.yaml
+      #     kubectl rollout status deployment/cloud-infra-demo
+      #     kubectl get services -o wide
       -
-        name: Deploy Image to Cluster
-        working-directory: deploy
+        name: Validate Environment
         run: |-
-          kubectl apply -f deployment.yaml
-          kubectl rollout status deployment/cloud-infra-demo
-          kubectl get services -o wide
+          EXTERNAL_IP=""
+          MAX_RETRIES=12
+          while [ -z $EXTERNAL_IP ] && [ $MAX_RETRIES -gt 0 ]
+          do
+            ((MAX_RETRIES--))
+            sleep 10
+            EXTERNAL_IP=$(kubectl get svc cloud-infra-demo-ingress --template="{{range .status.loadBalancer.ingress}}{{.ip}}{{end}}")
+          done
+
+          if [ -z $EXTERNAL_IP ]
+          then
+            echo "No external IP found."
+            exit 1
+          fi
+
+          PAYLOAD=$(curl -f -connect ${EXTERNAL_IP}:80)
+          if [ -z $PAYLOAD ]
+          then
+            echo "No payload."
+            exit 1
+          fi
+
+          if ! [ $(jq --raw-output ".message" <(echo -n $PAYLOAD)) = "Automate all the things!"]
+          then
+            echo "Unexpected payload"
+            exit 1
+          fi
