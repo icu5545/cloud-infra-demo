@@ -77,7 +77,7 @@ jobs:
             exit 1
           fi
 
-          PAYLOAD=$(curl -f -connect ${EXTERNAL_IP}:80)
+          PAYLOAD=$(curl -f ${EXTERNAL_IP}:80)
           if [ -z $PAYLOAD ]
           then
             echo "No payload."
