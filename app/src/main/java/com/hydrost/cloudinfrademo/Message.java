@@ -5,7 +5,7 @@ import java.time.Instant;
 public class Message {
     
     public String getMessage() {
-        return "Automate all the things!";
+        return "Automate all the";
     }
 
     public Long getTimestamp() {
